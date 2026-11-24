@@ -14,7 +14,12 @@ import got from 'got';
 // Set the folder where the JSON blog data lives inside the project.
 //const dataDir = path.join(process.cwd(), 'data');
 //path will not be needed because its not a loal json file
-const dataURL = "https://dev-de-carlo-cs-5513-week-11.pantheonsite.io//wp-json/twentytwentyone-child/v1/latest-posts/1";
+
+// week 13 adjust end point URRL
+const dataURL = "https://dev-de-carlo-cs-5513-week-11.pantheonsite.io//wp-json/twentytwentyone-child/v1/special";
+const dataURL2 = "https://dev-de-carlo-cs-5513-week-11.pantheonsite.io/wp-json/wp/v2/movie";
+const dataURL3 = "https://dev-de-carlo-cs-5513-week-11.pantheonsite.io/wp-json/wp/v2/snack";
+//const dataURL = "https://dev-de-carlo-cs-5513-week-11.pantheonsite.io//wp-json/wp/v2/movie";
 
 
 
@@ -28,10 +33,14 @@ export async function getSortedPostsData() {
 
     // this uses got to retrive the url for json parsing
     let jsonString;
+    let jsonString2;
+    let jsonString3;
     try {
         // next line uses got synchronously to retrive via https the json from wp site
         jsonString = await got(dataURL);
-        console.log(jsonString.body);
+        jsonString2 = await got(dataURL2);
+        jsonString3 = await got(dataURL3);
+        //console.log(jsonString.body);
 
     } catch (error) {
         jsonString.body = [];
@@ -42,6 +51,9 @@ export async function getSortedPostsData() {
     // Convert the text file into a JavaScript array of post objects.
     // this is for the local json file: const jsonObj = JSON.parse(jsonString);
     const jsonObj = JSON.parse(jsonString.body); // this was revised for got import
+    const jsonObj2 = JSON.parse(jsonString2.body);
+    const jsonObj3 = JSON.parse(jsonString3.body);
+
 
     // Sort the posts alphabetically by title so the list appears in a predictable order.
    // jsonObj.sort(function (a, b) {
@@ -52,14 +64,17 @@ export async function getSortedPostsData() {
     return jsonObj.map(item => {
         return {
             // Convert the numeric post id into a string so it works naturally in route URLs.
-            id: item.ID.toString(), // id was changed to ID due to case sensitivity of the JSON ID value
+            id: item.ID, // id was changed to ID due to case sensitivity of the JSON ID value
             // Keep the post title for display in the list.
             title: item.post_title,
+            content: item.post_content,
+            user_login: item.user_login,
+
             // Keep the published date for display and sorting.
-            date: item.post_date,
+          //  date: item.post_date,
             // Keep the gift idea data if the project uses it elsewhere.
             //giftideas: item.giftIdea
-            link1: item.guid,
+            link1: item.Guid,
         };
     });
 }
@@ -76,7 +91,7 @@ export async function getAllPostIds() {
     try {
         // next line uses got synchronously to retrive via https the json from wp site
         jsonString = await got(dataURL);
-        console.log(jsonString.body);
+       // console.log(jsonString.body);
 
     } catch (error) {
         jsonString.body = [];

@@ -2,6 +2,7 @@
 import Layout from './../components/layout';
 // Import the JSON-based post helper functions for the dynamic post routes.
 import { getAllPostIds, getPostData } from '../../lib/posts-json';
+//import { getSortedPostsData } from '../../lib/posts-json';
 // Keep an old import line commented out for reference during earlier markdown-based setup.
 //import { getAllPostIds, getPostData } from '../../lib/posts';
 
@@ -18,18 +19,21 @@ export default function Post({ postData }) {
   return (
     // Wrap the content in the shared site layout.
     <Layout>
+      <article className="card col-6">
+        <div className="card-body">
 
-      Title: {postData.post_title}
+          <h4 className="card-title"> {postData.post_title}</h4>
+          <h6 className="card-subtitle mb-2 text-muted">by {postData.user_login} </h6>
+
+          <div className="card-text" dangerouslySetInnerHTML={{__html: postData.post_content}} />
+          </div>
+          </article>
+
+     
 
       <br />
 
-      Date: {postData.post_date}
-      
 
-      <br />
-
-      
-      Card ID: {postData.ID}
     </Layout>
   );
 }
